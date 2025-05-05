@@ -17,13 +17,21 @@ const RequestTransformerTest = (props: RequestTransformerTestProps) => {
       });
 
       const data = await res.json();
-      log({
-        log: "Respuesta con token:\n" + JSON.stringify(data, null, 2),
-        state: "success",
-      });
+      const status = data.Estado as string;
+      if (status && status === "ERROR") {
+        log({
+          log: "Error con rate limit: " + JSON.stringify(data, null, 2),
+          state: "error",
+        });
+      } else {
+        log({
+          log: "Respuesta con rate limit:\n" + JSON.stringify(data, null, 2),
+          state: "success",
+        });
+      }
     } catch (err) {
       log({
-        log: "Error con token: " + (err as Error).message,
+        log: "Error con rate limit: " + (err as Error).message,
         state: "error",
       });
     }
