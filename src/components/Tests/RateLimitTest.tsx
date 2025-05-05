@@ -34,7 +34,9 @@ const RateLimitTest = (props: RateLimitTestProps) => {
   return (
     <>
       <h3>Test de Rate-Limiting</h3>
-      <button onClick={handleRateLimit}>Probar Rate-Limiting</button>
+      <div className="flex flex-col gap-2 ">
+        <button onClick={handleRateLimit}>Probar Rate-Limiting</button>
+      </div>
     </>
   );
 };

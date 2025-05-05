@@ -31,9 +31,11 @@ const RequestTransformerTest = (props: RequestTransformerTestProps) => {
   return (
     <>
       <h3>Test de Plugin Request Transformer</h3>
-      <button onClick={handleRequestTransformer}>
-        Probar Plugin Request Transformer
-      </button>
+      <div className="flex flex-col gap-2 ">
+        <button onClick={handleRequestTransformer}>
+          Probar Plugin Request Transformer
+        </button>
+      </div>
     </>
   );
 };

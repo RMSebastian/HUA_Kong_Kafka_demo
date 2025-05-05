@@ -81,7 +81,7 @@ const TokenTest = (props: TokenTestProps) => {
   return (
     <>
       <h3>Test del segurizado con Token</h3>
-      <div className="flex flex-row gap-2 ">
+      <div className="flex flex-col gap-2 ">
         <button onClick={handleSend} className="bg-gray-200 px-4 py-2 rounded">
           {`Probar ${token === "" ? "sin" : "con"} token`}
         </button>
