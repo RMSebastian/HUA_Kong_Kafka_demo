@@ -4,17 +4,11 @@ import { LoggerProps } from "./types";
 const Logger = ({ logs, onClear }: LoggerProps) => {
   let globalIndex = 0;
 
-  return (
-    <div className="flex flex-col w-full h-full bg-black font-mono overflow-hidden text-sm relative">
-      <div className="flex flex-col w-full h-full overflow-auto p-4">
-        {logs.length === 0 ? (
-          <div
-            className={"whitespace-pre-wrap " + `${loggerColorList["info"]}`}
-          >
-            {">"}
-          </div>
-        ) : (
-          logs.map((log, index) => {
+  const Logs = () => {
+    return (
+      <>
+        {logs.length !== 0 &&
+          logs.map((log) => {
             const logLines = log.log.split("\n");
 
             return logLines.map((line, lineIndex) => {
@@ -41,8 +35,15 @@ const Logger = ({ logs, onClear }: LoggerProps) => {
                 </div>
               );
             });
-          })
-        )}
+          })}
+      </>
+    );
+  };
+
+  return (
+    <div className="flex flex-col w-full h-full bg-black font-mono overflow-hidden text-sm relative">
+      <div className="flex flex-col w-full h-full overflow-auto p-4">
+        {Logs()}
       </div>
       <div className="flex w-full p-4 justify-end bg-[#1a1a1a]">
         <button onClick={onClear}>Limpiar consola</button>
