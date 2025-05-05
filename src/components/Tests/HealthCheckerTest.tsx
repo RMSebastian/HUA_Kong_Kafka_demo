@@ -15,18 +15,19 @@ const HealthCheckerTest = (props: HealthCheckerTestProps) => {
 
       if (status === "error") {
         log({
-          log: "Error con rate limit:\n" + JSON.stringify(data, null, 2),
+          log: "Error con health checker:\n" + JSON.stringify(data, null, 2),
           state: "error",
         });
       } else {
         log({
-          log: "Respuesta con rate limit:\n" + JSON.stringify(data, null, 2),
+          log:
+            "Respuesta con health checker:\n" + JSON.stringify(data, null, 2),
           state: "success",
         });
       }
     } catch (err) {
       log({
-        log: "Error con rate limit: " + (err as Error).message,
+        log: "Error con health checker: " + (err as Error).message,
         state: "error",
       });
     }
