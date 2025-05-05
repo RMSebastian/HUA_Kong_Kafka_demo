@@ -1,15 +1,14 @@
 import { LogProps } from "../Logger/types";
-export type TokenTestProps = {
+type BaseLogsProps = {
+  log: (message: LogProps) => void;
+};
+
+export type TokenTestProps = BaseLogsProps & {
   token: string;
-  log: (message: LogProps) => void;
 };
-export type RateLimitTestProps = {
-  log: (message: LogProps) => void;
-};
-export type RequestTransformerTestProps = {
+export type RequestTransformerTestProps = BaseLogsProps & {
   token: string;
-  log: (message: LogProps) => void;
 };
-export type HealthCheckerTestProps = {
-  log: (message: LogProps) => void;
-};
+export type RateLimitTestProps = BaseLogsProps;
+export type HealthCheckerTestProps = BaseLogsProps;
+export type KafkaTestProps = BaseLogsProps;

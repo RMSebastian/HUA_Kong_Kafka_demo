@@ -5,6 +5,7 @@ import RateLimitTest from "../components/Tests/RateLimitTest";
 import RequestTransformerTest from "../components/Tests/RequestTransformerTest";
 import { LogProps } from "../components/Logger/types";
 import HealthCheckerTest from "../components/Tests/HealthCheckerTest";
+import KafkaTest from "../components/Tests/KafkaTest";
 
 const LogPage = () => {
   const [logs, setLogs] = useState<LogProps[]>([]);
@@ -38,7 +39,9 @@ const LogPage = () => {
         </div>
         {/* KAFKA TESTS*/}
         <h2>Kafka</h2>
-        <div className="flex flex-col gap-4 border-2 border-[#242424] bg-[#242424] p-2 rounded-lg"></div>
+        <div className="flex flex-col gap-4 border-2 border-[#242424] bg-[#242424] p-2 rounded-lg">
+          <KafkaTest log={log} />
+        </div>
         {/* HEALTH CHECKER */}
         <h2>Health</h2>
         <div className="flex flex-col gap-4 border-2 border-[#242424] bg-[#242424] p-2 rounded-lg">
