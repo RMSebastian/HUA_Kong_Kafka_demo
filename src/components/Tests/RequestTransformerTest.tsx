@@ -3,47 +3,63 @@ import { RequestTransformerTestProps } from "./types";
 const RequestTransformerTest = (props: RequestTransformerTestProps) => {
   const { log, token } = props;
 
-  const handleRequestTransformer = async () => {
-    log({ log: "Solicitando con token...", state: "info" });
-    log({ log: "Token: " + token, state: "info" });
+  const handleTrasformer = async () => {
+    log({ log: "Solicitando con transformer...", state: "info" });
+    if (token) log({ log: "Token: " + token, state: "info" });
     try {
-      const url = "/obtener";
-      // log("URL: " + url);
-      const res = await fetch(url, {
-        method: "GET",
+      const token = import.meta.env.VITE_MARKEY_TOKEN;
+      const apikey = import.meta.env.VITE_MARKEY_APIKEY;
+
+      const res = await fetch("/obtener", {
+        method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`,
+          token: token,
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          aplicacion: "SelfServiceHUA",
+          operacion: "apiObtenerPaciente",
+          apiKey: apikey,
+          filtro: {
+            paciCodigoInterno: "73335104",
+          },
+        }),
       });
 
       const data = await res.json();
       const status = data.Estado as string;
+
       if (status && status === "ERROR") {
         log({
-          log: "Error con rate limit: " + JSON.stringify(data, null, 2),
+          log: "Error con transformer: " + JSON.stringify(data, null, 2),
           state: "error",
         });
       } else {
         log({
-          log: "Respuesta con rate limit:\n" + JSON.stringify(data, null, 2),
+          log: "Respuesta con transformer:\n" + JSON.stringify(data, null, 2),
           state: "success",
         });
       }
     } catch (err) {
       log({
-        log: "Error con rate limit: " + (err as Error).message,
+        log: "Error con transformer: " + (err as Error).message,
         state: "error",
       });
     }
   };
   return (
     <>
-      <h3>Test de Plugin Request Transformer</h3>
-      <div className="flex flex-col gap-2 ">
-        <button onClick={handleRequestTransformer}>
-          Probar Plugin Request Transformer
-        </button>
-      </div>
+      <>
+        <h3>Test de Plugin Transformer</h3>
+        <div className="flex flex-col gap-2 ">
+          <button onClick={handleTrasformer}>
+            Probar Plu-Transformer (Cabeceras)
+          </button>
+          <button onClick={handleTrasformer}>
+            Probar Plu-Transformer (Payload)
+          </button>
+        </div>
+      </>
     </>
   );
 };

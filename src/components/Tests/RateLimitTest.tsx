@@ -6,13 +6,28 @@ const RateLimitTest = (props: RateLimitTestProps) => {
   const handleRateLimit = async () => {
     log({ log: "Solicitando con rate limit...", state: "info" });
     try {
-      const url = "/obtener";
-      // log("URL: " + url);
-      const res = await fetch(url, {
-        method: "GET",
+      const token = import.meta.env.VITE_MARKEY_TOKEN;
+      const apikey = import.meta.env.VITE_MARKEY_APIKEY;
+
+      const res = await fetch("/obtener", {
+        method: "POST",
+        headers: {
+          token: token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          aplicacion: "SelfServiceHUA",
+          operacion: "apiObtenerPaciente",
+          apiKey: apikey,
+          filtro: {
+            paciCodigoInterno: "73335104",
+          },
+        }),
       });
+
       const data = await res.json();
       const status = data.Estado as string;
+
       if (status && status === "ERROR") {
         log({
           log: "Error con rate limit: " + JSON.stringify(data, null, 2),
@@ -31,6 +46,7 @@ const RateLimitTest = (props: RateLimitTestProps) => {
       });
     }
   };
+
   return (
     <>
       <h3>Test de Rate-Limiting</h3>

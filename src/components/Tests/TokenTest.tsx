@@ -15,7 +15,7 @@ const TokenTest = (props: TokenTestProps) => {
     log({ log: "Solicitando sin token...", state: "info" });
     try {
       const url =
-        "/api/Resultados/ListaResultados?" +
+        "ResultadosMiddleware/api/Resultados/ListaResultados?" +
         new URLSearchParams({
           Usuario: "PRUEBA",
           Origen: "1",
@@ -46,7 +46,7 @@ const TokenTest = (props: TokenTestProps) => {
     log({ log: "Token: " + token, state: "info" });
     try {
       const url =
-        "/api/Resultados/ListaResultados?" +
+        "ResultadosMiddleware/api/Resultados/ListaResultados?" +
         new URLSearchParams({
           Usuario: "PRUEBA",
           Origen: "1",

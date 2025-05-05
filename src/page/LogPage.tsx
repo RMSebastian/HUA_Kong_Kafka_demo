@@ -4,6 +4,7 @@ import TokenTest from "../components/Tests/TokenTest";
 import RateLimitTest from "../components/Tests/RateLimitTest";
 import RequestTransformerTest from "../components/Tests/RequestTransformerTest";
 import { LogProps } from "../components/Logger/types";
+import HealthCheckerTest from "../components/Tests/HealthCheckerTest";
 
 const LogPage = () => {
   const [logs, setLogs] = useState<LogProps[]>([]);
@@ -29,13 +30,20 @@ const LogPage = () => {
           ></input>
         </div>
         {/* KONG TESTS*/}
-        <>
+        <h2>Kong</h2>
+        <div className="flex flex-col gap-4 border-2 border-[#242424] bg-[#242424] p-2 rounded-lg">
           <TokenTest log={log} token={token} />
           <RateLimitTest log={log} />
           <RequestTransformerTest log={log} token={token} />
-        </>
+        </div>
         {/* KAFKA TESTS*/}
-        <></>
+        <h2>Kafka</h2>
+        <div className="flex flex-col gap-4 border-2 border-[#242424] bg-[#242424] p-2 rounded-lg"></div>
+        {/* HEALTH CHECKER */}
+        <h2>Health</h2>
+        <div className="flex flex-col gap-4 border-2 border-[#242424] bg-[#242424] p-2 rounded-lg">
+          <HealthCheckerTest log={log} />
+        </div>
       </div>
       <div className="flex h-full w-full p-4">
         <div className="flex flex-col w-full gap-4 items-start">

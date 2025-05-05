@@ -10,3 +10,6 @@ export type RequestTransformerTestProps = {
   token: string;
   log: (message: LogProps) => void;
 };
+export type HealthCheckerTestProps = {
+  log: (message: LogProps) => void;
+};
