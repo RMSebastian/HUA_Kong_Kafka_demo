@@ -1,5 +1,5 @@
 import { LogProps } from "../Logger/types";
-type BaseLogsProps = {
+export type BaseLogsProps = {
   log: (message: LogProps) => void;
 };
 
