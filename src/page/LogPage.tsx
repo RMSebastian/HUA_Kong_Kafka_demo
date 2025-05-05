@@ -19,12 +19,12 @@ const LogPage = () => {
   };
 
   return (
-    <div className="flex h-screen w-screen">
-      <div className="flex w-[300px] flex-col bg-gray-800 text-white text-center p-4 gap-4">
+    <div className="flex h-screen w-screen ">
+      <div className="flex w-[400px] flex-col bg-gray-800 text-white text-center p-4 gap-4 overflow-y-auto overflow-x-hidden">
         <div className="flex flex-row gap-2">
           <p className="text-lg self-center">Token</p>
           <input
-            className="bg-[#1a1a1a] rounded-lg font-mono px-4 py-2"
+            className="bg-[#1a1a1a] rounded-lg font-mono px-4 py-2 w-full"
             type="text"
             value={token}
             onChange={(e) => setToken(e.target.value)}

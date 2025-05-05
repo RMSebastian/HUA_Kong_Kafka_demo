@@ -24,19 +24,19 @@ const KafkaTest = (props: KafkaTestProps) => {
 
       if (status === "error") {
         log({
-          log: "Error con rate limit:\n" + JSON.stringify(data, null, 2),
-          state: "error",
+          log: `Error con ${type}:\n` + JSON.stringify(data, null, 2),
+          state: `error`,
         });
       } else {
         log({
-          log: "Respuesta con rate limit:\n" + JSON.stringify(data, null, 2),
-          state: "success",
+          log: `Respuesta con ${type}:\n` + JSON.stringify(data, null, 2),
+          state: `success`,
         });
       }
     } catch (err) {
       log({
-        log: "Error con rate limit: " + (err as Error).message,
-        state: "error",
+        log: `Error con ${type}: ` + (err as Error).message,
+        state: `error`,
       });
     }
   };
