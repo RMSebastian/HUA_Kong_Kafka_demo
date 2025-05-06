@@ -8,12 +8,16 @@ import { pacienteData } from "../constant/bodyRequests";
 
 // TOKEN TEST
 export const handleToken = async ({ token, log }: TokenTestProps) => {
-  log({ log: "Solicitando con token...", state: "info" });
-  if (token !== "")
-    log({ log: `Token: ${token.slice(0, 10)}...`, state: "info" });
+  const hasToken = token !== "";
+
+  log({
+    log: `Solicitando ${hasToken ? "con" : "sin"} token...`,
+    state: "info",
+  });
+  if (hasToken) log({ log: `Token: ${token.slice(0, 10)}...`, state: "info" });
   try {
     const url =
-      "api/results/ResultadosMiddleware/api/Resultados/ListaResultados?" +
+      "api/ResultadosMiddleware/api/Resultados/ListaResultados?" +
       new URLSearchParams({
         Usuario: "PRUEBA",
         Origen: "1",
@@ -34,12 +38,16 @@ export const handleToken = async ({ token, log }: TokenTestProps) => {
 
     const data = await res.json();
     log({
-      log: "Respuesta con token:\n" + JSON.stringify(data, null, 2),
+      log:
+        `Respuesta ${hasToken ? "con" : "sin"} token:\n` +
+        JSON.stringify(data, null, 2),
       state: "success",
     });
   } catch (err) {
     log({
-      log: "Error con token: " + (err as Error).message,
+      log:
+        `Respuesta ${hasToken ? "con" : "sin"} token:\n` +
+        (err as Error).message,
       state: "error",
     });
   }
@@ -50,13 +58,15 @@ export const handleTrasformer = async ({
   token,
   log,
 }: RequestTransformerTestProps) => {
+  const hasToken = token !== "";
+
   log({ log: "Solicitando con transformer...", state: "info" });
-  if (token) log({ log: "Token: " + token, state: "info" });
+  if (hasToken) log({ log: `Token: ${token.slice(0, 10)}...`, state: "info" });
   try {
     const token = import.meta.env.VITE_MARKEY_TOKEN;
     const apikey = import.meta.env.VITE_MARKEY_APIKEY;
 
-    const res = await fetch("/obtener", {
+    const res = await fetch("api/markey/APIMarkeyV2/obtener", {
       method: "POST",
       headers: {
         token: token,
@@ -76,10 +86,7 @@ export const handleTrasformer = async ({
     const status = data.Estado as string;
 
     if (status && status === "ERROR") {
-      log({
-        log: "Error con transformer: " + JSON.stringify(data, null, 2),
-        state: "error",
-      });
+      throw new Error(data);
     } else {
       log({
         log: "Respuesta con transformer:\n" + JSON.stringify(data, null, 2),
@@ -102,7 +109,7 @@ export const handleRateLimit = async ({ log }: RateLimitTestProps) => {
     const apikey = import.meta.env.VITE_MARKEY_APIKEY;
     let attemps = 0;
     while (attemps <= 15) {
-      const res = await fetch("/obtener", {
+      const res = await fetch("api/markey/APIMarkeyV2/obtener", {
         method: "POST",
         headers: {
           token: token,
@@ -117,16 +124,12 @@ export const handleRateLimit = async ({ log }: RateLimitTestProps) => {
           },
         }),
       });
-
       attemps += 1;
       const data = await res.json();
       const status = data.Estado as string;
 
       if (status && status === "ERROR") {
-        log({
-          log: `Error respuesta N°${attemps}:` + JSON.stringify(data, null, 2),
-          state: "error",
-        });
+        throw new Error(data);
       } else {
         if (attemps === 1)
           log({
@@ -137,12 +140,14 @@ export const handleRateLimit = async ({ log }: RateLimitTestProps) => {
             )}}`,
             state: "success",
           });
+
         log({
           log: `Verificada respuesta N°${attemps}`,
           state: "success",
         });
       }
     }
+    
     log({
       log: "Terminado rate limit",
       state: "info",
@@ -164,8 +169,8 @@ export const handleKafkaRequest = async (
   try {
     const url =
       type === "HIS"
-        ? "/InterfazPacienteHIS/api/Paciente/Procesar"
-        : "/InterfazPacienteFDH/api/Paciente/Procesar";
+        ? "api/InterfazPacienteHIS/api/Paciente/Procesar"
+        : "api/InterfazPacienteFDH/api/Paciente/Procesar";
     const res = await fetch(url, {
       method: "POST",
       headers: {
@@ -200,7 +205,7 @@ export const handleKafkaRequest = async (
 export const handleCheker = async ({ log }: BaseLogsProps) => {
   log({ log: "Solicitando health checker...", state: "info" });
   try {
-    const res = await fetch("/PlatformModuleSAP/Health/GetDatabasesStatus", {
+    const res = await fetch("api/PlatformModuleSAP/Health/GetDatabasesStatus", {
       method: "GET",
     });
 
