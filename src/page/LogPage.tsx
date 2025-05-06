@@ -28,24 +28,25 @@ const LogPage = () => {
             type="text"
             value={token}
             onChange={(e) => setToken(e.target.value)}
-          ></input>
+          />
+          <button onClick={() => setToken("")}>Limpiar</button>
         </div>
         {/* KONG TESTS*/}
         <h2>Kong</h2>
         <div className="flex flex-col gap-4 border-2 border-[#242424] bg-[#242424] p-2 rounded-lg">
           <TokenTest log={log} token={token} />
-          <RateLimitTest log={log} />
+          <RateLimitTest log={log} token={token} />
           <RequestTransformerTest log={log} token={token} />
         </div>
         {/* KAFKA TESTS*/}
         <h2>Kafka</h2>
         <div className="flex flex-col gap-4 border-2 border-[#242424] bg-[#242424] p-2 rounded-lg">
-          <KafkaTest log={log} />
+          <KafkaTest log={log} token={token} />
         </div>
         {/* HEALTH CHECKER */}
         <h2>Health</h2>
         <div className="flex flex-col gap-4 border-2 border-[#242424] bg-[#242424] p-2 rounded-lg">
-          <HealthCheckerTest log={log} />
+          <HealthCheckerTest log={log} token={token} />
         </div>
       </div>
       <div className="flex h-full flex-3 p-4 overflow-hidden">
