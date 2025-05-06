@@ -41,7 +41,7 @@ const Logger = ({ logs, onClear }: LoggerProps) => {
   };
 
   return (
-    <div className="flex flex-col w-full h-full bg-black font-mono overflow-hidden text-sm relative">
+    <div className="flex flex-col w-full h-full bg-black font-mono">
       <div className="flex flex-col w-full h-full overflow-auto p-4">
         {Logs()}
       </div>

@@ -19,8 +19,8 @@ const LogPage = () => {
   };
 
   return (
-    <div className="flex h-screen w-screen ">
-      <div className="flex w-[400px] flex-col bg-gray-800 text-white text-center p-4 gap-4 overflow-y-auto overflow-x-hidden">
+    <div className="flex h-screen w-screen">
+      <div className="flex flex-1 min-w-[300px] flex-col bg-gray-800 text-white text-center p-4 gap-4 overflow-y-auto overflow-x-hidden">
         <div className="flex flex-row gap-2">
           <p className="text-lg self-center">Token</p>
           <input
@@ -48,10 +48,8 @@ const LogPage = () => {
           <HealthCheckerTest log={log} />
         </div>
       </div>
-      <div className="flex h-full w-full p-4">
-        <div className="flex flex-col w-full gap-4 items-start">
-          <Logger logs={logs} onClear={clearLogs} />
-        </div>
+      <div className="flex h-full flex-3 p-4 overflow-hidden">
+        <Logger logs={logs} onClear={clearLogs} />
       </div>
     </div>
   );
