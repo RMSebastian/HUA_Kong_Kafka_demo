@@ -7,42 +7,13 @@ import {
 import { pacienteData } from "../constant/bodyRequests";
 
 // TOKEN TEST
-export const handleSinToken = async ({ log }: BaseLogsProps) => {
-  log({ log: "Solicitando sin token...", state: "info" });
-  try {
-    const url =
-      "ResultadosMiddleware/api/Resultados/ListaResultados?" +
-      new URLSearchParams({
-        Usuario: "PRUEBA",
-        Origen: "1",
-        Protocolo: "4",
-        CheckConfidencialidad: "false",
-        CheckPEP: "false",
-        FechaDesde: "2021-10-25",
-        FechaHasta: "2021-10-28",
-        IdPaciente: "73499846",
-      });
-    // log("URL: " + url);
-    const res = await fetch(url);
-    const data = await res.json();
-    log({
-      log: "Respuesta sin token:\n" + JSON.stringify(data, null, 2),
-      state: "success",
-    });
-  } catch (err) {
-    log({
-      log: "Error sin token: " + (err as Error).message,
-      state: "error",
-    });
-  }
-};
-
-export const handleConToken = async ({ token, log }: TokenTestProps) => {
+export const handleToken = async ({ token, log }: TokenTestProps) => {
   log({ log: "Solicitando con token...", state: "info" });
-  log({ log: "Token: " + token, state: "info" });
+  if (token !== "")
+    log({ log: `Token: ${token.slice(0, 10)}...`, state: "info" });
   try {
     const url =
-      "ResultadosMiddleware/api/Resultados/ListaResultados?" +
+      "api/results/ResultadosMiddleware/api/Resultados/ListaResultados?" +
       new URLSearchParams({
         Usuario: "PRUEBA",
         Origen: "1",
@@ -57,7 +28,7 @@ export const handleConToken = async ({ token, log }: TokenTestProps) => {
     const res = await fetch(url, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: token !== "" ? `Bearer ${token}` : "",
       },
     });
 
