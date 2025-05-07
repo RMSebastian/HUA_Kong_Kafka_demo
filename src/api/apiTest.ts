@@ -126,29 +126,38 @@ export const handleTrasformer = async ({
   log,
   type = "header",
 }: RequestTransformerTestProps) => {
+  const apikey = import.meta.env.VITE_MARKEY_APIKEY;
   const hasToken = token !== "";
-
+  const headers = {
+    ...(token && { Authorization: `Bearer ${token}` }),
+    "Content-Type": "application/json",
+  };
+  const body = JSON.stringify({
+    ...(type === "header" && {
+      aplicacion: "SelfServiceHUA",
+      apiKey: apikey,
+    }),
+    operacion: "apiObtenerPaciente",
+    filtro: {
+      paciCodigoInterno: "73335104",
+    },
+  });
   log({ log: `Solicitando con ${type}-transformer...`, state: "info" });
+  if (type === "header")
+    log({
+      log: `Header:\n ${JSON.stringify(headers, null, 2)}`,
+      state: "info",
+    });
+  else log({ log: `Body:\n ${body}`, state: "info" });
+
   if (hasToken) log({ log: `Token: ${token.slice(0, 10)}...`, state: "info" });
   try {
-    const apikey = import.meta.env.VITE_MARKEY_APIKEY;
     const res = await fetch(
       `services/markey/${type}-transformer-test/APIMarkeyV2/obtener`,
       {
         method: "POST",
-        headers: {
-          ...(token && { Authorization: `Bearer ${token}` }),
-          // token: apiToken,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          aplicacion: "SelfServiceHUA",
-          operacion: "apiObtenerPaciente",
-          apiKey: apikey,
-          filtro: {
-            paciCodigoInterno: "73335104",
-          },
-        }),
+        headers: headers,
+        body: body,
       }
     );
 
@@ -248,5 +257,3 @@ export const handleKafkaRequest = async (
     });
   }
 };
-
-
