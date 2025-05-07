@@ -5,7 +5,9 @@ export type BaseLogsProps = {
 };
 
 export type TokenTestProps = BaseLogsProps;
-export type RequestTransformerTestProps = BaseLogsProps;
+export type RequestTransformerTestProps = BaseLogsProps & {
+  type?: "header" | "body";
+};
 export type RateLimitTestProps = BaseLogsProps;
 export type HealthCheckerTestProps = BaseLogsProps;
 export type KafkaTestProps = BaseLogsProps;

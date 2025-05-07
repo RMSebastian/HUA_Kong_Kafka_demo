@@ -53,55 +53,6 @@ export const handleToken = async ({ token, log }: TokenTestProps) => {
   }
 };
 
-// TRANSFORMER TEST
-export const handleTrasformer = async ({
-  token,
-  log,
-}: RequestTransformerTestProps) => {
-  const hasToken = token !== "";
-
-  log({ log: "Solicitando con transformer...", state: "info" });
-  if (hasToken) log({ log: `Token: ${token.slice(0, 10)}...`, state: "info" });
-  try {
-    const apiToken = import.meta.env.VITE_MARKEY_TOKEN;
-    const apikey = import.meta.env.VITE_MARKEY_APIKEY;
-
-    const res = await fetch("api/markey/APIMarkeyV2/obtener", {
-      method: "POST",
-      headers: {
-        ...(token && { Authorization: `Bearer ${token}` }),
-        token: apiToken,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        aplicacion: "SelfServiceHUA",
-        operacion: "apiObtenerPaciente",
-        apiKey: apikey,
-        filtro: {
-          paciCodigoInterno: "73335104",
-        },
-      }),
-    });
-
-    const data = await res.json();
-    const status = data.Estado as string;
-
-    if (status && status === "ERROR") {
-      throw new Error(data);
-    } else {
-      log({
-        log: "Respuesta con transformer:\n" + JSON.stringify(data, null, 2),
-        state: "success",
-      });
-    }
-  } catch (err) {
-    log({
-      log: "Error con transformer: " + (err as Error).message,
-      state: "error",
-    });
-  }
-};
-
 // RATE LIMIT TEST
 export const handleRateLimit = async ({ log, token }: RateLimitTestProps) => {
   const hasToken = token !== "";
@@ -164,6 +115,59 @@ export const handleRateLimit = async ({ log, token }: RateLimitTestProps) => {
   } catch (err) {
     log({
       log: "Error con rate limit: " + (err as Error).message,
+      state: "error",
+    });
+  }
+};
+
+// TRANSFORMER TEST
+export const handleTrasformer = async ({
+  token,
+  log,
+  type = "header",
+}: RequestTransformerTestProps) => {
+  const hasToken = token !== "";
+
+  log({ log: `Solicitando con ${type}-transformer...`, state: "info" });
+  if (hasToken) log({ log: `Token: ${token.slice(0, 10)}...`, state: "info" });
+  try {
+    const apikey = import.meta.env.VITE_MARKEY_APIKEY;
+    const res = await fetch(
+      `/api/markey/${type}-transformer-test/APIMarkeyV2/obtener`,
+      {
+        method: "POST",
+        headers: {
+          ...(token && { Authorization: `Bearer ${token}` }),
+          // token: apiToken,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          aplicacion: "SelfServiceHUA",
+          operacion: "apiObtenerPaciente",
+          apiKey: apikey,
+          filtro: {
+            paciCodigoInterno: "73335104",
+          },
+        }),
+      }
+    );
+
+    const data = await res.json();
+    const status = data.Estado as string;
+
+    if (status && status === "ERROR") {
+      throw new Error(data);
+    } else {
+      log({
+        log: "Respuesta con transformer:\n" + JSON.stringify(data, null, 2),
+        state: "success",
+      });
+    }
+  } catch (err) {
+    log({
+      log:
+        "Error con transformer: " +
+        JSON.stringify((err as Error).message, null, 2),
       state: "error",
     });
   }

@@ -9,10 +9,14 @@ const RequestTransformerTest = (props: RequestTransformerTestProps) => {
       <>
         <h3>Test de Plugin Transformer</h3>
         <div className="flex flex-col gap-2 ">
-          <button onClick={() => handleTrasformer({ log, token })}>
+          <button
+            onClick={() => handleTrasformer({ log, token, type: "header" })}
+          >
             Probar Plu-Transformer (Cabeceras)
           </button>
-          <button onClick={() => handleTrasformer({ log, token })}>
+          <button
+            onClick={() => handleTrasformer({ log, token, type: "body" })}
+          >
             Probar Plu-Transformer (Payload)
           </button>
         </div>
