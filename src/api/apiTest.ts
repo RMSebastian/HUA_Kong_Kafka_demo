@@ -172,7 +172,38 @@ export const handleTrasformer = async ({
     });
   }
 };
+// HEALTH CHECKER TEST
+export const handleCheker = async ({ log }: BaseLogsProps) => {
+  log({ log: "Solicitando health checker...", state: "info" });
+  try {
+    const res = await fetch(
+      "services/health/PlatformModuleSAP/Health/GetDatabasesStatus",
+      {
+        method: "GET",
+      }
+    );
 
+    const data = await res.json();
+    const status = data.status;
+
+    if (status === "error") {
+      log({
+        log: "Error con health checker:\n" + JSON.stringify(data, null, 2),
+        state: "error",
+      });
+    } else {
+      log({
+        log: "Respuesta con health checker:\n" + JSON.stringify(data, null, 2),
+        state: "success",
+      });
+    }
+  } catch (err) {
+    log({
+      log: "Error con health checker: " + (err as Error).message,
+      state: "error",
+    });
+  }
+};
 //KAFKA TEST
 export const handleKafkaRequest = async (
   type: "HIS" | "FDH",
@@ -218,35 +249,4 @@ export const handleKafkaRequest = async (
   }
 };
 
-// HEALTH CHECKER TEST
-export const handleCheker = async ({ log }: BaseLogsProps) => {
-  log({ log: "Solicitando health checker...", state: "info" });
-  try {
-    const res = await fetch(
-      "services/health/PlatformModuleSAP/Health/GetDatabasesStatus",
-      {
-        method: "GET",
-      }
-    );
 
-    const data = await res.json();
-    const status = data.status;
-
-    if (status === "error") {
-      log({
-        log: "Error con health checker:\n" + JSON.stringify(data, null, 2),
-        state: "error",
-      });
-    } else {
-      log({
-        log: "Respuesta con health checker:\n" + JSON.stringify(data, null, 2),
-        state: "success",
-      });
-    }
-  } catch (err) {
-    log({
-      log: "Error con health checker: " + (err as Error).message,
-      state: "error",
-    });
-  }
-};
