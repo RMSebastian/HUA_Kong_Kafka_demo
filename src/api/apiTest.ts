@@ -4,7 +4,6 @@ import {
   RequestTransformerTestProps,
   TokenTestProps,
 } from "../components/Tests/types";
-import { pacienteData } from "../constant/bodyRequests";
 
 // TOKEN TEST
 export const handleToken = async ({ token, log }: TokenTestProps) => {
@@ -214,46 +213,103 @@ export const handleCheker = async ({ log }: BaseLogsProps) => {
   }
 };
 //KAFKA TEST
-export const handleKafkaRequest = async (
-  type: "HIS" | "FDH",
-  log: BaseLogsProps["log"],
-  token: BaseLogsProps["token"]
-) => {
-  const hasToken = token !== "";
-  log({ log: `Enviando body ${type}...`, state: "info" });
-  if (hasToken) {
-    log({ log: `Token: ${token.slice(0, 10)}...`, state: "info" });
-  }
+export const handleSendKafka = async ({ log, token }: BaseLogsProps) => {
+  const body: any = {
+    name: "Medicamento",
+    description: "Medicamento de prueba",
+    price: 100,
+  };
+  const headers = {
+    ...(token && { Authorization: `Bearer ${token}` }),
+    "Content-Type": "application/json",
+  };
+  log({ log: "Solicitando envio a kafka provider...", state: "info" });
+  log({ log: `Body:\n ${JSON.stringify(body, null, 2)}`, state: "info" });
   try {
-    const res = await fetch(
-      `services/api/InterfazPaciente${type}/api/Paciente/Procesar`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(pacienteData),
-      }
-    );
-
+    const url = "services/kafka/produce/createProduct";
+    const res = await fetch(url, {
+      method: "POST",
+      headers: headers,
+      body: body,
+    });
     const data = await res.json();
-    const status = data.status;
-
-    if (status === "error") {
-      log({
-        log: `Error con ${type}:\n` + JSON.stringify(data, null, 2),
-        state: `error`,
-      });
-    } else {
-      log({
-        log: `Respuesta con ${type}:\n` + JSON.stringify(data, null, 2),
-        state: `success`,
-      });
-    }
-  } catch (err) {
     log({
-      log: `Error con ${type}: ` + (err as Error).message,
-      state: `error`,
+      log: `Respueta Provider:\n ${JSON.stringify(data, null, 2)}`,
+      state: "success",
+    });
+  } catch (error) {
+    log({
+      log: "Error con kafka provider: " + (error as Error).message,
+      state: "error",
     });
   }
 };
+export const handleFetchKafka = async ({ log, token }: BaseLogsProps) => {
+  const url = "services/kafka/consume/allProducts";
+  log({ log: "Solicitando rescate a kafka consumer...", state: "info" });
+  const headers = {
+    ...(token && { Authorization: `Bearer ${token}` }),
+    "Content-Type": "application/json",
+  };
+  try {
+    const res = await fetch(url, {
+      method: "GET",
+      headers: headers,
+    });
+
+    const data = await res.json();
+    log({
+      log: `Respueta Consumer:\n ${JSON.stringify(data, null, 2)}`,
+      state: "success",
+    });
+  } catch (error) {
+    log({
+      log: "Error con kafka consumer: " + (error as Error).message,
+      state: "error",
+    });
+  }
+};
+
+// export const handleKafkaRequest = async (
+//   type: "HIS" | "FDH",
+//   log: BaseLogsProps["log"],
+//   token: BaseLogsProps["token"]
+// ) => {
+//   const hasToken = token !== "";
+//   log({ log: `Enviando body ${type}...`, state: "info" });
+//   if (hasToken) {
+//     log({ log: `Token: ${token.slice(0, 10)}...`, state: "info" });
+//   }
+//   try {
+//     const res = await fetch(
+//       `services/api/InterfazPaciente${type}/api/Paciente/Procesar`,
+//       {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify(pacienteData),
+//       }
+//     );
+
+//     const data = await res.json();
+//     const status = data.status;
+
+//     if (status === "error") {
+//       log({
+//         log: `Error con ${type}:\n` + JSON.stringify(data, null, 2),
+//         state: `error`,
+//       });
+//     } else {
+//       log({
+//         log: `Respuesta con ${type}:\n` + JSON.stringify(data, null, 2),
+//         state: `success`,
+//       });
+//     }
+//   } catch (err) {
+//     log({
+//       log: `Error con ${type}: ` + (err as Error).message,
+//       state: `error`,
+//     });
+//   }
+// };
