@@ -5,6 +5,9 @@ import {
   TokenTestProps,
 } from "../components/Tests/types";
 
+const producerURL = import.meta.env.VITE_KAFKA_PRODUCER_URL;
+const consumerURL = import.meta.env.VITE_KAFKA_CONSUMER_URL;
+
 // TOKEN TEST
 export const handleToken = async ({ token, log }: TokenTestProps) => {
   const hasToken = token !== "";
@@ -219,19 +222,21 @@ export const handleSendKafka = async ({ log, token }: BaseLogsProps) => {
     description: "Medicamento de prueba",
     price: 100,
   };
-  const headers = {
-    ...(token && { Authorization: `Bearer ${token}` }),
-    "Content-Type": "application/json",
-  };
   log({ log: "Solicitando envio a kafka provider...", state: "info" });
   log({ log: `Body:\n ${JSON.stringify(body, null, 2)}`, state: "info" });
   try {
-    const url = "services/kafka/produce/createProduct";
-    const res = await fetch(url, {
+    const res = await fetch(`${producerURL}/createProduct`, {
       method: "POST",
-      headers: headers,
-      body: body,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: body.name,
+        description: body.description,
+        price: body.price,
+      }),
     });
+
     const data = await res.json();
     log({
       log: `Respueta Provider:\n ${JSON.stringify(data, null, 2)}`,
@@ -245,16 +250,14 @@ export const handleSendKafka = async ({ log, token }: BaseLogsProps) => {
   }
 };
 export const handleFetchKafka = async ({ log, token }: BaseLogsProps) => {
-  const url = "services/kafka/consume/allProducts";
   log({ log: "Solicitando rescate a kafka consumer...", state: "info" });
   const headers = {
     ...(token && { Authorization: `Bearer ${token}` }),
     "Content-Type": "application/json",
   };
   try {
-    const res = await fetch(url, {
+    const res = await fetch(`${consumerURL}/allProducts`, {
       method: "GET",
-      headers: headers,
     });
 
     const data = await res.json();
