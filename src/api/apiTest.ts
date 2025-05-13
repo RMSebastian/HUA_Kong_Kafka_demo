@@ -438,7 +438,7 @@ const rateLimitWhile = async (
 ) => {
   let flag = true;
   let attemps = 0;
-  if (token) {
+  if (!token) {
     flag = false;
   }
   while (flag) {
