@@ -249,6 +249,39 @@ export const handleSendKafka = async ({ log, token }: BaseLogsProps) => {
     });
   }
 };
+export const handleSendKafkaDLQ = async ({ log, token }: BaseLogsProps) => {
+  const body: any = {
+    name: "fail",
+    description: "Falla de simulacro",
+    price: 999,
+  };
+  log({ log: "Solicitando envio a kafka provider...", state: "info" });
+  log({ log: `Body:\n ${JSON.stringify(body, null, 2)}`, state: "info" });
+  try {
+    const res = await fetch(`${producerURL}/createProduct`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: body.name,
+        description: body.description,
+        price: body.price,
+      }),
+    });
+
+    const data = await res.json();
+    log({
+      log: `Respueta Provider:\n ${JSON.stringify(data, null, 2)}`,
+      state: "success",
+    });
+  } catch (error) {
+    log({
+      log: "Error con kafka provider: " + (error as Error).message,
+      state: "error",
+    });
+  }
+};
 export const handleFetchKafka = async ({ log, token }: BaseLogsProps) => {
   log({ log: "Solicitando rescate a kafka consumer...", state: "info" });
   const headers = {
@@ -268,6 +301,30 @@ export const handleFetchKafka = async ({ log, token }: BaseLogsProps) => {
   } catch (error) {
     log({
       log: "Error con kafka consumer: " + (error as Error).message,
+      state: "error",
+    });
+  }
+};
+export const handleFetchKafkaDLQ = async ({ log }: BaseLogsProps) => {
+  log({ log: "Solicitando rescate a kafka Consumer DLQ...", state: "info" });
+
+  try {
+    const res = await fetch(`${consumerURL}/Dlq`, {
+      method: "GET",
+    });
+
+    const data = await res.json();
+    log({
+      log: `Ultimos datos generados por el simulacro DLQ:\n ${JSON.stringify(
+        data,
+        null,
+        2
+      )}`,
+      state: "error",
+    });
+  } catch (error) {
+    log({
+      log: "Error con kafka consumer DLQ: " + (error as Error).message,
       state: "error",
     });
   }
