@@ -188,7 +188,7 @@ export const handleTrasformer = async ({
               apikey:
                 "UZN9291llgxWJ93uzilrmantG6t20r0v8kwrihYXmZl1EO8irdhT0gFK0tFAlv3m",
               aplicacion: "SelfServiceHUA",
-              operacion: "apiObtenerPaciente",
+              // operacion: "apiObtenerPaciente",
               ...bodyObject,
             },
             null,
@@ -438,9 +438,6 @@ const rateLimitWhile = async (
 ) => {
   let flag = true;
   let attemps = 0;
-  if (!token) {
-    flag = false;
-  }
   while (flag) {
     const res = await sendLimit(`usuario ${user}`, token, apikey, apiToken);
 
@@ -455,7 +452,10 @@ const rateLimitWhile = async (
         log: `Verificada respuesta N°${attemps}, usuario ${user}`,
         state: color ? "success" : "success_two",
       });
-      if (JSON.stringify(data, null, 2).includes("API rate limit exceeded")) {
+      if (
+        JSON.stringify(data, null, 2).includes("API rate limit exceeded") ||
+        JSON.stringify(data, null, 2).includes("Unauthorized")
+      ) {
         flag = false;
       }
       if (attemps === 1 || attemps >= 10)
