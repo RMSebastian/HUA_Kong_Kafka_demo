@@ -1,77 +1,104 @@
+/* =====================================
+   Root Styles (Base configuration)
+===================================== */
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Default theme: Dark Mode */
+  color-scheme: dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  /* Brand Colors */
+  --primary-color: #646cff;
+  --primary-hover-color: #535bf2;
+  --button-bg-color: #1a1a1a;
+  --button-border-color: transparent;
+  --button-text-color: #ffffff;
+  --link-color: #646cff;
+  --link-hover-color: #535bf2;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
+/* =====================================
+   Global Element Styles
+===================================== */
 body {
   margin: 0;
   display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--background-color);
+  color: var(--color);
 }
 
+/* Headings */
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
+
 h2 {
   font-size: 2.6em;
   line-height: 0.9;
 }
-h2 {
-  font-size: 2em;
-  line-height: 0.7;
+
+/* Links */
+a {
+  font-weight: 500;
+  color: var(--link-color);
+  text-decoration: inherit;
 }
 
+a:hover {
+  color: var(--link-hover-color);
+}
+
+/* =====================================
+   Button Styles
+===================================== */
 button {
-  color: #000000 !important; /* Fuerza el color a negro */
   border-radius: 8px;
-  border: 1px solid transparent;
+  border: 1px solid var(--button-border-color);
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--button-bg-color);
+  color: var(--button-text-color);
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: border-color 0.25s, background-color 0.25s, color 0.25s;
 }
+
 button:hover {
-  border-color: #646cff;
+  border-color: var(--primary-color);
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* =====================================
+   Light Mode Overrides
+===================================== */
 @media (prefers-color-scheme: light) {
   :root {
+    /* Theme Colors */
+    color-scheme: light;
     color: #213547;
     background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+
+    /* Overrides */
+    --button-bg-color: #f9f9f9;
+    --button-text-color: #213547;
+    --link-hover-color: #747bff;
   }
 }
