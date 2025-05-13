@@ -4,4 +4,5 @@ export const loggerColorList = {
   warning: "text-yellow-500",
   info: "text-blue-500",
   success_two: "text-white-400",
+  extra: "text-purple-500",
 };

@@ -101,12 +101,14 @@ export const handleTrasformer = async ({
   log,
   type = "header",
 }: RequestTransformerTestProps) => {
+
   const apikey = import.meta.env.VITE_MARKEY_APIKEY;
   const hasToken = token !== "";
   const headers = {
     ...(token && { Authorization: `Bearer ${token}` }),
     "Content-Type": "application/json",
   };
+
   const body = JSON.stringify({
     ...(type === "header" && {
       aplicacion: "SelfServiceHUA",
@@ -117,14 +119,16 @@ export const handleTrasformer = async ({
       paciCodigoInterno: "73335104",
     },
   });
+
   log({ log: `Solicitando con ${type}-transformer...`, state: "info" });
+
   if (type === "header")
     log({
-      log: `Header:\n ${JSON.stringify(headers, null, 2)}`,
+      log: `HEADERS INICIALES:\n ${JSON.stringify(headers, null, 2)}`,
       state: "info",
     });
   else log({ log: `Body:\n ${body}`, state: "info" });
-
+ 
   if (hasToken) log({ log: `Token: ${token.slice(0, 10)}...`, state: "info" });
   try {
     const res = await fetch(
@@ -142,6 +146,14 @@ export const handleTrasformer = async ({
     if (status && status === "ERROR") {
       throw new Error(data);
     } else {
+      log({
+        log: `\n HEADERS TRANSFORMADOS: \n ${JSON.stringify(
+          {token: 'UZN9291llgxWJ93uzilrmantG6t20r0v8kwrihYXmZl1EO8irdhT0gFK0tFAlv3m', ...headers}, 
+          null, 
+          2
+        )}`,
+        state: "extra",
+      });
       log({
         log: "Respuesta con transformer:\n" + JSON.stringify(data, null, 2),
         state: "success",
