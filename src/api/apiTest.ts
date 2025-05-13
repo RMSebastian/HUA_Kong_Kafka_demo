@@ -159,7 +159,7 @@ export const handleTrasformer = async ({
     } else {
       if (type === "header") {
         log({
-          log: `\n HEADERS TRANSFORMADOS: \n ${JSON.stringify(
+          log: `HEADERS TRANSFORMADOS: \n ${JSON.stringify(
             {token: 'UZN9291llgxWJ93uzilrmantG6t20r0v8kwrihYXmZl1EO8irdhT0gFK0tFAlv3m', ...headers}, 
             null, 
             2
@@ -168,7 +168,7 @@ export const handleTrasformer = async ({
         });
       } else {
         log({
-          log: `\n BODY TRANSFORMADO: \n ${JSON.stringify(
+          log: `BODY TRANSFORMADO: \n ${JSON.stringify(
             {
               apikey: 'UZN9291llgxWJ93uzilrmantG6t20r0v8kwrihYXmZl1EO8irdhT0gFK0tFAlv3m',
               aplicacion: "SelfServiceHUA",
@@ -182,7 +182,7 @@ export const handleTrasformer = async ({
         });
       }
       log({
-        log: "Respuesta con transformer:\n" + JSON.stringify(data, null, 2),
+        log: "RESPUESTA RECIBIDA CON TRANSFORMER:\n" + JSON.stringify(data, null, 2),
         state: "success",
       });
     }
