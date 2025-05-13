@@ -19,7 +19,6 @@ const TokenTest = (props: TokenTestProps) => {
         <button
           onClick={() => handleToken({ log, token })}
           className="bg-gray-200 px-4 py-2 rounded"
-          disabled={!token}
         >
           {`Probar con token`}
         </button>
