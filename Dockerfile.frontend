@@ -1,0 +1,18 @@
+# Imagen base oficial de Node
+FROM node:18-alpine
+
+# Crear carpeta de trabajo
+WORKDIR /app
+
+# Copiar package.json y lockfile
+COPY package*.json ./
+
+# Instalar dependencias
+RUN npm install
+
+# Copiar el resto del código fuente
+COPY . .
+
+EXPOSE 5556
+
+CMD ["npm", "run", "dev", "--", "--host"]

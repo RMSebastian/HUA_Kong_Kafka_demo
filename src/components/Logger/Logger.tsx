@@ -14,6 +14,11 @@ const Logger = ({ logs, onClear }: LoggerProps) => {
             return logLines.map((line, lineIndex) => {
               globalIndex++;
 
+              const testId =
+              line.includes('"apiHealth"') && lineIndex === 0
+                ? { 'data-testid': 'health-response' }
+                : {};
+
               return (
                 <div key={`${globalIndex}`} className="flex flex-row gap-2">
                   <div
@@ -29,6 +34,7 @@ const Logger = ({ logs, onClear }: LoggerProps) => {
                     className={
                       "whitespace-pre-wrap " + `${loggerColorList[log.state]}`
                     }
+                    {...testId}
                   >
                     {lineIndex > 0 ? `|   ${line}` : `>   ${line}`}
                   </div>

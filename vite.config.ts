@@ -8,6 +8,9 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react(), tailwindcss()],
     server: {
+      host: true, // escucha en 0.0.0.0 para que Docker pueda acceder
+      port: 5556, // asegurate de que sea el correcto si lo usás explícitamente
+      allowedHosts: ['frontend-app'], // 👈 permite conexiones desde el contenedor
       proxy: {
         "/services": {
           target: env.VITE_API_URL,

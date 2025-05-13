@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  frontend-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "5556:5556"
+    volumes:
+      - ./src:/app/src
+    command: npm run dev -- --host
+
+  healthchecker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: health-checker
+    volumes:
+      - ./test-results:/app/test-results
+    depends_on:
+      - frontend-app
