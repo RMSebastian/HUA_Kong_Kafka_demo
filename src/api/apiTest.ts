@@ -79,7 +79,14 @@ export const handleRateLimit = async ({
         break;
       case 2:
         await rateLimitWhile("user1", token, log, apikey, apiToken);
-        await rateLimitWhile("user2", secondToken, log, apikey, apiToken, false);
+        await rateLimitWhile(
+          "user2",
+          secondToken,
+          log,
+          apikey,
+          apiToken,
+          false
+        );
         break;
     }
 
@@ -101,7 +108,6 @@ export const handleTrasformer = async ({
   log,
   type = "header",
 }: RequestTransformerTestProps) => {
-
   const apikey = import.meta.env.VITE_MARKEY_APIKEY;
   const hasToken = token !== "";
   const headers = {
@@ -120,11 +126,15 @@ export const handleTrasformer = async ({
     },
   };
 
-  const bodyObjectWithAplication = JSON.stringify({
-    aplicacion: "SelfServiceHUA",
-    ...bodyObject
-  }, null, 2)
-    
+  const bodyObjectWithAplication = JSON.stringify(
+    {
+      aplicacion: "SelfServiceHUA",
+      ...bodyObject,
+    },
+    null,
+    2
+  );
+
   const body = JSON.stringify(bodyObject);
 
   log({ log: `Solicitando con ${type}-transformer...`, state: "info" });
@@ -135,11 +145,12 @@ export const handleTrasformer = async ({
       state: "info",
     });
   else {
-    log({ 
-      log: `BODY INICIAL:\n ${bodyObjectWithAplication}`, 
-      state: "info" });
+    log({
+      log: `BODY INICIAL:\n ${bodyObjectWithAplication}`,
+      state: "info",
+    });
   }
- 
+
   if (hasToken) log({ log: `Token: ${token.slice(0, 10)}...`, state: "info" });
   try {
     const res = await fetch(
@@ -160,8 +171,12 @@ export const handleTrasformer = async ({
       if (type === "header") {
         log({
           log: `HEADERS TRANSFORMADOS: \n ${JSON.stringify(
-            {token: 'UZN9291llgxWJ93uzilrmantG6t20r0v8kwrihYXmZl1EO8irdhT0gFK0tFAlv3m', ...headers}, 
-            null, 
+            {
+              token:
+                "UZN9291llgxWJ93uzilrmantG6t20r0v8kwrihYXmZl1EO8irdhT0gFK0tFAlv3m",
+              ...headers,
+            },
+            null,
             2
           )}`,
           state: "extra",
@@ -170,19 +185,22 @@ export const handleTrasformer = async ({
         log({
           log: `BODY TRANSFORMADO: \n ${JSON.stringify(
             {
-              apikey: 'UZN9291llgxWJ93uzilrmantG6t20r0v8kwrihYXmZl1EO8irdhT0gFK0tFAlv3m',
+              apikey:
+                "UZN9291llgxWJ93uzilrmantG6t20r0v8kwrihYXmZl1EO8irdhT0gFK0tFAlv3m",
               aplicacion: "SelfServiceHUA",
-              operacion: 'apiObtenerPaciente',
-              ...bodyObject
-            }, 
-            null, 
+              operacion: "apiObtenerPaciente",
+              ...bodyObject,
+            },
+            null,
             2
           )}`,
           state: "extra",
         });
       }
       log({
-        log: "RESPUESTA RECIBIDA CON TRANSFORMER:\n" + JSON.stringify(data, null, 2),
+        log:
+          "RESPUESTA RECIBIDA CON TRANSFORMER:\n" +
+          JSON.stringify(data, null, 2),
         state: "success",
       });
     }
@@ -420,6 +438,9 @@ const rateLimitWhile = async (
 ) => {
   let flag = true;
   let attemps = 0;
+  if (token) {
+    flag = false;
+  }
   while (flag) {
     const res = await sendLimit(`usuario ${user}`, token, apikey, apiToken);
 
@@ -432,7 +453,7 @@ const rateLimitWhile = async (
     } else {
       log({
         log: `Verificada respuesta N°${attemps}, usuario ${user}`,
-        state: "success",
+        state: color ? "success" : "success_two",
       });
       if (JSON.stringify(data, null, 2).includes("API rate limit exceeded")) {
         flag = false;
