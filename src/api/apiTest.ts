@@ -436,7 +436,6 @@ const sendLimit = async (
     type === "global" ? "global-" : ""
   }test/APIMarkeyV2/obtener`;
 
-  console.log(url);
   return await fetch(url, {
     method: "POST",
     headers: {
