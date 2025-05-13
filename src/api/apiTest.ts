@@ -60,6 +60,7 @@ export const handleToken = async ({ token, log }: TokenTestProps) => {
 export const handleRateLimit = async ({
   log,
   token,
+  type = "consumer",
   users,
 }: RateLimitTestProps) => {
   const hasToken = token !== "";
@@ -75,17 +76,37 @@ export const handleRateLimit = async ({
 
     switch (users) {
       case 1:
-        await rateLimitWhile("user1", token, log, apikey, apiToken);
+        await rateLimitWhile(
+          "user1",
+          token,
+          log,
+          type,
+          apikey,
+          apiToken,
+          undefined,
+          10
+        );
         break;
       case 2:
-        await rateLimitWhile("user1", token, log, apikey, apiToken);
+        await rateLimitWhile(
+          "user1",
+          token,
+          log,
+          type,
+          apikey,
+          apiToken,
+          undefined,
+          5
+        );
         await rateLimitWhile(
           "user2",
           secondToken,
           log,
           apikey,
+          type,
           apiToken,
-          false
+          false,
+          5
         );
         break;
     }
@@ -408,9 +429,15 @@ const sendLimit = async (
   user: string,
   token: string,
   apikey: string,
-  apiToken: string
+  apiToken: string,
+  type: "global" | "consumer"
 ) => {
-  return await fetch("services/markey/rate-limit-test/APIMarkeyV2/obtener", {
+  const url = `services/markey/rate-limit-${
+    type === "global" ? "global-" : ""
+  }test/APIMarkeyV2/obtener`;
+
+  console.log(url);
+  return await fetch(url, {
     method: "POST",
     headers: {
       ...(token && { Authorization: `Bearer ${token}` }),
@@ -432,14 +459,22 @@ const rateLimitWhile = async (
   user: string,
   token: string,
   log: any,
+  type: "global" | "consumer",
   apikey: string,
   apiToken: string,
-  color: boolean = true
+  color: boolean = true,
+  maxAttemps: number
 ) => {
   let flag = true;
   let attemps = 0;
   while (flag) {
-    const res = await sendLimit(`usuario ${user}`, token, apikey, apiToken);
+    const res = await sendLimit(
+      `usuario ${user}`,
+      token,
+      apikey,
+      apiToken,
+      type
+    );
 
     attemps += 1;
     const data = await res.json();
@@ -458,7 +493,7 @@ const rateLimitWhile = async (
       ) {
         flag = false;
       }
-      if (attemps === 1 || attemps >= 10)
+      if (attemps === 1 || attemps >= maxAttemps)
         log({
           log: `Datos de la respuesta N°${attemps}: ${JSON.stringify(
             data,

@@ -9,6 +9,9 @@ export type TokenTestProps = BaseLogsProps;
 export type RequestTransformerTestProps = BaseLogsProps & {
   type?: "header" | "body";
 };
-export type RateLimitTestProps = BaseLogsProps;
+export type RateLimitTestProps = BaseLogsProps & {
+  type?: "global" | "consumer";
+  maxAttemps?: number;
+};
 export type HealthCheckerTestProps = BaseLogsProps;
 export type KafkaTestProps = BaseLogsProps;
