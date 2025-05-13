@@ -9,10 +9,19 @@ const TokenTest = (props: TokenTestProps) => {
       <h3>Test del segurizado con Token</h3>
       <div className="flex flex-col gap-2 ">
         <button
-          onClick={() => handleToken({ log, token })}
+          onClick={() => handleToken({ log, token: "" })}
           className="bg-gray-200 px-4 py-2 rounded"
         >
-          {`Probar ${token === "" ? "sin" : "con"} token`}
+          {`Probar sin token`}
+        </button>
+      </div>
+      <div className="flex flex-col gap-2 ">
+        <button
+          onClick={() => handleToken({ log, token })}
+          className="bg-gray-200 px-4 py-2 rounded"
+          disabled={!token}
+        >
+          {`Probar con token`}
         </button>
       </div>
     </>
