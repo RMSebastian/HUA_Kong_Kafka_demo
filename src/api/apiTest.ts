@@ -1,3 +1,4 @@
+import { stat } from "fs";
 import {
   BaseLogsProps,
   RateLimitTestProps,
@@ -56,58 +57,30 @@ export const handleToken = async ({ token, log }: TokenTestProps) => {
 };
 
 // RATE LIMIT TEST
-export const handleRateLimit = async ({ log, token }: RateLimitTestProps) => {
+export const handleRateLimit = async ({
+  log,
+  token,
+  users,
+}: RateLimitTestProps) => {
   const hasToken = token !== "";
   log({ log: "Solicitando con rate limit...", state: "info" });
   if (hasToken) {
     log({ log: `Token: ${token.slice(0, 10)}...`, state: "info" });
   }
+
   try {
     const apiToken = import.meta.env.VITE_MARKEY_TOKEN;
     const apikey = import.meta.env.VITE_MARKEY_APIKEY;
-    let attemps = 0;
-    while (attemps < 15) {
-      const res = await fetch(
-        "services/markey/rate-limit-test/APIMarkeyV2/obtener",
-        {
-          method: "POST",
-          headers: {
-            ...(token && { Authorization: `Bearer ${token}` }),
-            token: apiToken,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            aplicacion: "SelfServiceHUA",
-            operacion: "apiObtenerPaciente",
-            apiKey: apikey,
-            filtro: {
-              paciCodigoInterno: "73335104",
-            },
-          }),
-        }
-      );
+    const secondToken = import.meta.env.VITE_SECOND_TOKEN;
 
-      attemps += 1;
-      const data = await res.json();
-      const status = data.Estado as string;
-
-      if (status && status === "ERROR") {
-        throw new Error(data);
-      } else {
-        log({
-          log: `Verificada respuesta N°${attemps}`,
-          state: "success",
-        });
-        if (attemps === 1 || attemps >= 10)
-          log({
-            log: `Datos de la respuesta N°${attemps}: ${JSON.stringify(
-              data,
-              null,
-              2
-            )}}`,
-            state: "success",
-          });
-      }
+    switch (users) {
+      case 1:
+        await rateLimitWhile("user1", token, log, apikey, apiToken);
+        break;
+      case 2:
+        await rateLimitWhile("user1", token, log, apikey, apiToken);
+        await rateLimitWhile("user2", secondToken, log, apikey, apiToken, false);
+        break;
     }
 
     log({
@@ -385,3 +358,67 @@ export const handleFetchKafkaDLQ = async ({ log }: BaseLogsProps) => {
 //     });
 //   }
 // };
+
+const sendLimit = async (
+  user: string,
+  token: string,
+  apikey: string,
+  apiToken: string
+) => {
+  return await fetch("services/markey/rate-limit-test/APIMarkeyV2/obtener", {
+    method: "POST",
+    headers: {
+      ...(token && { Authorization: `Bearer ${token}` }),
+      token: apiToken,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      aplicacion: "SelfServiceHUA",
+      operacion: "apiObtenerPaciente",
+      apiKey: apikey,
+      filtro: {
+        paciCodigoInterno: "73335104",
+      },
+    }),
+  });
+};
+
+const rateLimitWhile = async (
+  user: string,
+  token: string,
+  log: any,
+  apikey: string,
+  apiToken: string,
+  color: boolean = true
+) => {
+  let flag = true;
+  let attemps = 0;
+  while (flag) {
+    const res = await sendLimit(`usuario ${user}`, token, apikey, apiToken);
+
+    attemps += 1;
+    const data = await res.json();
+    const status = data.Estado as string;
+
+    if (status && status === "ERROR") {
+      throw new Error(data);
+    } else {
+      log({
+        log: `Verificada respuesta N°${attemps}, usuario ${user}`,
+        state: "success",
+      });
+      if (JSON.stringify(data, null, 2).includes("API rate limit exceeded")) {
+        flag = false;
+      }
+      if (attemps === 1 || attemps >= 10)
+        log({
+          log: `Datos de la respuesta N°${attemps}: ${JSON.stringify(
+            data,
+            null,
+            2
+          )}}`,
+          state: color ? "success" : "success_two",
+        });
+    }
+  }
+};

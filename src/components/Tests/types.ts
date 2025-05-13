@@ -2,6 +2,7 @@ import { LogProps } from "../Logger/types";
 export type BaseLogsProps = {
   log: (message: LogProps) => void;
   token: string;
+  users?: number;
 };
 
 export type TokenTestProps = BaseLogsProps;
