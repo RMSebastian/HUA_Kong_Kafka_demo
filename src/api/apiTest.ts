@@ -269,7 +269,7 @@ export const handleSendKafka = async ({ log, token }: BaseLogsProps) => {
 
     const data = await res.json();
     log({
-      log: `Respueta Provider:\n ${JSON.stringify(data, null, 2)}`,
+      log: `Respuesta Provider:\n ${JSON.stringify(data, null, 2)}`,
       state: "success",
     });
   } catch (error) {
@@ -302,7 +302,7 @@ export const handleSendKafkaDLQ = async ({ log, token }: BaseLogsProps) => {
 
     const data = await res.json();
     log({
-      log: `Respueta Provider:\n ${JSON.stringify(data, null, 2)}`,
+      log: `Respuesta Provider:\n ${JSON.stringify(data, null, 2)}`,
       state: "success",
     });
   } catch (error) {
@@ -325,7 +325,7 @@ export const handleFetchKafka = async ({ log, token }: BaseLogsProps) => {
 
     const data = await res.json();
     log({
-      log: `Respueta Consumer:\n ${JSON.stringify(data, null, 2)}`,
+      log: `Respuesta Consumer:\n ${JSON.stringify(data, null, 2)}`,
       state: "success",
     });
   } catch (error) {

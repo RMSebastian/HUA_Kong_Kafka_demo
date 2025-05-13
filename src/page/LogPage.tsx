@@ -33,7 +33,7 @@ const LogPage = () => {
         </div>
         {/* KONG TESTS*/}
         <h2>Kong</h2>
-        <div className="flex flex-col gap-4 border-2 border-[#242424] bg-[#242424] p-2 rounded-lg">
+        <div className="flex flex-col gap-4 border-2 border-[#242424] bg-[#242424] p-2 rounded-lg ">
           <TokenTest log={log} token={token} />
           <RateLimitTest log={log} token={token} />
           <RequestTransformerTest log={log} token={token} />
