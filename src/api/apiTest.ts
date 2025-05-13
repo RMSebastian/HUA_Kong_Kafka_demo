@@ -109,7 +109,7 @@ export const handleTrasformer = async ({
     "Content-Type": "application/json",
   };
 
-  const body = JSON.stringify({
+  const bodyObject = {
     ...(type === "header" && {
       aplicacion: "SelfServiceHUA",
       apiKey: apikey,
@@ -118,7 +118,14 @@ export const handleTrasformer = async ({
     filtro: {
       paciCodigoInterno: "73335104",
     },
-  });
+  };
+
+  const bodyObjectWithAplication = JSON.stringify({
+    aplicacion: "SelfServiceHUA",
+    ...bodyObject
+  }, null, 2)
+    
+  const body = JSON.stringify(bodyObject);
 
   log({ log: `Solicitando con ${type}-transformer...`, state: "info" });
 
@@ -127,7 +134,11 @@ export const handleTrasformer = async ({
       log: `HEADERS INICIALES:\n ${JSON.stringify(headers, null, 2)}`,
       state: "info",
     });
-  else log({ log: `Body:\n ${body}`, state: "info" });
+  else {
+    log({ 
+      log: `BODY INICIAL:\n ${bodyObjectWithAplication}`, 
+      state: "info" });
+  }
  
   if (hasToken) log({ log: `Token: ${token.slice(0, 10)}...`, state: "info" });
   try {
@@ -146,14 +157,30 @@ export const handleTrasformer = async ({
     if (status && status === "ERROR") {
       throw new Error(data);
     } else {
-      log({
-        log: `\n HEADERS TRANSFORMADOS: \n ${JSON.stringify(
-          {token: 'UZN9291llgxWJ93uzilrmantG6t20r0v8kwrihYXmZl1EO8irdhT0gFK0tFAlv3m', ...headers}, 
-          null, 
-          2
-        )}`,
-        state: "extra",
-      });
+      if (type === "header") {
+        log({
+          log: `\n HEADERS TRANSFORMADOS: \n ${JSON.stringify(
+            {token: 'UZN9291llgxWJ93uzilrmantG6t20r0v8kwrihYXmZl1EO8irdhT0gFK0tFAlv3m', ...headers}, 
+            null, 
+            2
+          )}`,
+          state: "extra",
+        });
+      } else {
+        log({
+          log: `\n BODY TRANSFORMADO: \n ${JSON.stringify(
+            {
+              apikey: 'UZN9291llgxWJ93uzilrmantG6t20r0v8kwrihYXmZl1EO8irdhT0gFK0tFAlv3m',
+              aplicacion: "SelfServiceHUA",
+              operacion: 'apiObtenerPaciente',
+              ...bodyObject
+            }, 
+            null, 
+            2
+          )}`,
+          state: "extra",
+        });
+      }
       log({
         log: "Respuesta con transformer:\n" + JSON.stringify(data, null, 2),
         state: "success",
