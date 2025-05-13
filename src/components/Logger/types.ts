@@ -5,5 +5,5 @@ export type LoggerProps = {
 
 export type LogProps = {
   log: string;
-  state: "success" | "error" | "warning" | "info";
+  state: "success" | "error" | "warning" | "info" | "extra";
 };
