@@ -9,6 +9,7 @@ services:
       - "5556:5556"
     volumes:
       - ./src:/app/src
+      - ./test-results:/app/public/test-results
     command: npm run dev -- --host
 
   healthchecker:
@@ -17,6 +18,7 @@ services:
       dockerfile: Dockerfile
     container_name: health-checker
     volumes:
-      - ./test-results:/app/test-results
+      - ./test-results:/app/public/test-results
+      - ./playwright:/app/playwright 
     depends_on:
       - frontend-app

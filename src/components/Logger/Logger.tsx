@@ -48,7 +48,9 @@ const Logger = ({ logs, onClear }: LoggerProps) => {
 
   return (
     <div className="flex flex-col w-full h-full bg-black font-mono">
-      <div className="flex flex-col w-full h-full overflow-auto p-4">
+      <div className="flex flex-col w-full h-full overflow-auto p-4"
+         data-testid="health-response"
+         >
         {Logs()}
       </div>
       <div className="flex w-full p-4 justify-end bg-[#1a1a1a]">
