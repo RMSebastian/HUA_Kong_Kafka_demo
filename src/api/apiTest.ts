@@ -1,4 +1,3 @@
-import { stat } from "fs";
 import {
   BaseLogsProps,
   RateLimitTestProps,
@@ -235,13 +234,16 @@ export const handleTrasformer = async ({
   }
 };
 // HEALTH CHECKER TEST
-export const handleCheker = async ({ log }: BaseLogsProps) => {
+export const handleCheker = async ({ log, token }: BaseLogsProps) => {
   log({ log: "Solicitando health checker...", state: "info" });
   try {
     const res = await fetch(
       "services/health/PlatformModuleSAP/Health/GetDatabasesStatus",
       {
         method: "GET",
+        headers: {
+          Authorization: token !== "" ? `Bearer ${token}` : "",
+        },
       }
     );
 
@@ -267,7 +269,7 @@ export const handleCheker = async ({ log }: BaseLogsProps) => {
   }
 };
 //KAFKA TEST
-export const handleSendKafka = async ({ log, token }: BaseLogsProps) => {
+export const handleSendKafka = async ({ log }: BaseLogsProps) => {
   const body: any = {
     name: "Medicamento",
     description: "Medicamento de prueba",
@@ -300,7 +302,7 @@ export const handleSendKafka = async ({ log, token }: BaseLogsProps) => {
     });
   }
 };
-export const handleSendKafkaDLQ = async ({ log, token }: BaseLogsProps) => {
+export const handleSendKafkaDLQ = async ({ log }: BaseLogsProps) => {
   const body: any = {
     name: "fail",
     description: "Falla de simulacro",
@@ -333,12 +335,9 @@ export const handleSendKafkaDLQ = async ({ log, token }: BaseLogsProps) => {
     });
   }
 };
-export const handleFetchKafka = async ({ log, token }: BaseLogsProps) => {
+export const handleFetchKafka = async ({ log }: BaseLogsProps) => {
   log({ log: "Solicitando rescate a kafka consumer...", state: "info" });
-  const headers = {
-    ...(token && { Authorization: `Bearer ${token}` }),
-    "Content-Type": "application/json",
-  };
+
   try {
     const res = await fetch(`${consumerURL}/allProducts`, {
       method: "GET",
@@ -426,7 +425,6 @@ export const handleFetchKafkaDLQ = async ({ log }: BaseLogsProps) => {
 // };
 
 const sendLimit = async (
-  user: string,
   token: string,
   apikey: string,
   apiToken: string,
@@ -467,13 +465,7 @@ const rateLimitWhile = async (
   let flag = true;
   let attemps = 0;
   while (flag) {
-    const res = await sendLimit(
-      `usuario ${user}`,
-      token,
-      apikey,
-      apiToken,
-      type
-    );
+    const res = await sendLimit(token, apikey, apiToken, type);
 
     attemps += 1;
     const data = await res.json();
