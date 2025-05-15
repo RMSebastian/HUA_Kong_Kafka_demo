@@ -22,7 +22,7 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 # Reemplazar configuración de nginx si tienes una personalizada
 # COPY nginx.conf /etc/nginx/nginx.conf
 
-# Exponer puerto 80
+# Exponer puerto 80\
 EXPOSE 80
 
 # Comando por defecto
