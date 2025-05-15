@@ -1,13 +1,7 @@
 version: "3.8"
-x-default-logging: &logging
-  driver: "json-file"
-  options:
-    max-size: "5m"
-    max-file: "2"
-    tag: "{{.Name}}"
+
 services:
   frontend:
-    logging: *logging
     build:
       context: .
       dockerfile: Dockerfile
