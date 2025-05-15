@@ -8,13 +8,13 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react(), tailwindcss()],
     server: {
-      proxy: {
-        "/services": {
-          target: env.VITE_API_URL,
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/services/, ""),
-        },
-      },
+      // proxy: {
+      //   "/services": {
+      //     target: env.VITE_API_URL,
+      //     changeOrigin: true,
+      //     rewrite: (path) => path.replace(/^\/services/, ""),
+      //   },
+      // },
     },
   };
 });
