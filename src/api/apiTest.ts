@@ -7,7 +7,7 @@ import {
 
 const producerURL = import.meta.env.VITE_KAFKA_PRODUCER_URL;
 const consumerURL = import.meta.env.VITE_KAFKA_CONSUMER_URL;
-
+export const BASE_URL = import.meta.env.VITE_API_URL;
 // TOKEN TEST
 export const handleToken = async ({ token, log }: TokenTestProps) => {
   const hasToken = token !== "";
@@ -19,7 +19,8 @@ export const handleToken = async ({ token, log }: TokenTestProps) => {
   if (hasToken) log({ log: `Token: ${token.slice(0, 10)}...`, state: "info" });
   try {
     const url =
-      "services/api/ResultadosMiddleware/api/Resultados/ListaResultados?" +
+      BASE_URL +
+      "/services/api/ResultadosMiddleware/api/Resultados/ListaResultados?" +
       new URLSearchParams({
         Usuario: "PRUEBA",
         Origen: "1",
@@ -35,6 +36,8 @@ export const handleToken = async ({ token, log }: TokenTestProps) => {
       method: "GET",
       headers: {
         Authorization: token !== "" ? `Bearer ${token}` : "",
+        "Content-Type": "application/json",
+        Accept: "application/json",
       },
     });
 
@@ -174,7 +177,8 @@ export const handleTrasformer = async ({
   if (hasToken) log({ log: `Token: ${token.slice(0, 10)}...`, state: "info" });
   try {
     const res = await fetch(
-      `services/markey/${type}-transformer-test/APIMarkeyV2/obtener`,
+      BASE_URL +
+        `/services/markey/${type}-transformer-test/APIMarkeyV2/obtener`,
       {
         method: "POST",
         headers: headers,
@@ -238,7 +242,7 @@ export const handleCheker = async ({ log, token }: BaseLogsProps) => {
   log({ log: "Solicitando health checker...", state: "info" });
   try {
     const res = await fetch(
-      "services/health/PlatformModuleSAP/Health/GetDatabasesStatus",
+      BASE_URL + "/services/health/PlatformModuleSAP/Health/GetDatabasesStatus",
       {
         method: "GET",
         headers: {
@@ -430,9 +434,11 @@ const sendLimit = async (
   apiToken: string,
   type: "global" | "consumer"
 ) => {
-  const url = `services/markey/rate-limit-${
-    type === "global" ? "global-" : ""
-  }test/APIMarkeyV2/obtener`;
+  const url =
+    BASE_URL +
+    `/services/markey/rate-limit-${
+      type === "global" ? "global-" : ""
+    }test/APIMarkeyV2/obtener`;
 
   return await fetch(url, {
     method: "POST",
