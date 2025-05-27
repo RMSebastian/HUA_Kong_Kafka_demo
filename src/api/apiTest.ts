@@ -10,35 +10,33 @@ const consumerURL = import.meta.env.VITE_KAFKA_CONSUMER_URL;
 export const BASE_URL = import.meta.env.VITE_API_URL;
 // TOKEN TEST
 export const handleToken = async ({ token, log }: TokenTestProps) => {
+  const apikey = import.meta.env.VITE_MARKEY_APIKEY;
   const hasToken = token !== "";
+  const headers = {
+    ...(token && { Authorization: `Bearer ${token}` }),
+    "Content-Type": "application/json",
+    token: "UZN9291llgxWJ93uzilrmantG6t20r0v8kwrihYXmZl1EO8irdhT0gFK0tFAlv3m",
+  };
 
+  const bodyObject = {
+    aplicacion: "SelfServiceHUA",
+    apiKey: apikey,
+    operacion: "apiObtenerPaciente",
+    filtro: {
+      paciCodigoInterno: "73335104",
+    },
+  };
+  const body = JSON.stringify(bodyObject);
   log({
     log: `Solicitando ${hasToken ? "con" : "sin"} token...`,
     state: "info",
   });
   if (hasToken) log({ log: `Token: ${token.slice(0, 10)}...`, state: "info" });
   try {
-    const url =
-      BASE_URL +
-      "/services/api/ResultadosMiddleware/api/Resultados/ListaResultados?" +
-      new URLSearchParams({
-        Usuario: "PRUEBA",
-        Origen: "1",
-        Protocolo: "4",
-        CheckConfidencialidad: "false",
-        CheckPEP: "false",
-        FechaDesde: "2021-10-25",
-        FechaHasta: "2021-10-28",
-        IdPaciente: "73499846",
-      });
-    // log("URL: " + url);
-    const res = await fetch(url, {
-      method: "GET",
-      headers: {
-        Authorization: token !== "" ? `Bearer ${token}` : "",
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
+    const res = await fetch(BASE_URL + `/services/markey/APIMarkeyV2/obtener`, {
+      method: "POST",
+      headers: headers,
+      body: body,
     });
 
     const data = await res.json();
