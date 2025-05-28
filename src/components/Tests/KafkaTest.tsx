@@ -15,14 +15,14 @@ const KafkaTest = (props: KafkaTestProps) => {
       <div className="flex flex-col gap-2 ">
         {/* <button onClick={() => handleKafkaRequest("FDH", log, token)}> */}
         <button onClick={() => handleSendKafka({ log, token })}>
-          Generar una peticion normal
-        </button>
-        <button onClick={() => handleSendKafkaDLQ({ log, token })}>
-          Generar un error simulado
+          Producir un evento
         </button>
       </div>
       <h3>Consumer (Quien recibira informaciòn)</h3>
       <div className="flex flex-col gap-2 ">
+        <button onClick={() => handleSendKafkaDLQ({ log, token })}>
+          Producir un error simulado
+        </button>
         <button onClick={() => handleFetchKafka({ log, token })}>
           {/* <button onClick={() => handleKafkaRequest("HIS", log, token)}> */}
           Rescatar lista de datos
