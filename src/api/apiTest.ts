@@ -485,8 +485,15 @@ const rateLimitWhile = async (
     if (status && status === "ERROR") {
       throw new Error(data);
     } else {
+      const total = res.headers.get("x-ratelimit-limit-minute");
+      const remain = res.headers.get("x-ratelimit-remaining-minute");
+      for (const [key, value] of res.headers.entries()) {
+        console.log(`${key}: ${value}`);
+      }
       log({
-        log: `Verificada respuesta N°${attemps}, usuario ${user}`,
+        log: `${user}: Respuesta N°${attemps}. ${
+          total && remain ? `Límite total: ${total}, Restantes: ${remain}` : ""
+        } `,
         state: color ? "success" : "success_two",
       });
       if (
