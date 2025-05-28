@@ -6,7 +6,7 @@ const TokenTest = (props: TokenTestProps) => {
 
   return (
     <>
-      <h3>Test del segurizado con Token</h3>
+      <h3>Test del securizado con Token</h3>
       <div className="flex flex-col gap-2 ">
         <button
           onClick={() => handleToken({ log, token: "" })}
