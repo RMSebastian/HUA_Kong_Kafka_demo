@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export type LoggerProps = {
   logs: LogProps[];
   onClear: () => void;
@@ -5,5 +7,6 @@ export type LoggerProps = {
 
 export type LogProps = {
   log: string;
-  state: "success" | "error" | "warning" | "info"| "success_two"| "extra";
+  state: "success" | "error" | "warning" | "info" | "success_two" | "extra";
+  expandable?: boolean;
 };

@@ -46,6 +46,7 @@ export const handleToken = async ({ token, log }: TokenTestProps) => {
         `Respuesta ${hasToken ? "con" : "sin"} token:\n` +
         JSON.stringify(data, null, 2),
       state: "success",
+      expandable: true,
     });
   } catch (err) {
     log({
@@ -165,11 +166,13 @@ export const handleTrasformer = async ({
     log({
       log: `HEADERS INICIALES:\n ${JSON.stringify(headers, null, 2)}`,
       state: "info",
+      expandable: true,
     });
   else {
     log({
       log: `BODY INICIAL:\n ${bodyObjectWithAplication}`,
       state: "info",
+      expandable: true,
     });
   }
 
@@ -203,6 +206,7 @@ export const handleTrasformer = async ({
             2
           )}`,
           state: "extra",
+          expandable: true,
         });
       } else {
         log({
@@ -218,6 +222,7 @@ export const handleTrasformer = async ({
             2
           )}`,
           state: "extra",
+          expandable: true,
         });
       }
       log({
@@ -225,6 +230,7 @@ export const handleTrasformer = async ({
           "RESPUESTA RECIBIDA CON TRANSFORMER:\n" +
           JSON.stringify(data, null, 2),
         state: "success",
+        expandable: true,
       });
     }
   } catch (err) {
@@ -263,17 +269,20 @@ export const handleCheker = async ({ log, token }: BaseLogsProps) => {
       log({
         log: "Error con health checker:\n" + JSON.stringify(data, null, 2),
         state: "error",
+        expandable: true,
       });
     } else {
       log({
         log: "Respuesta con health checker:\n" + JSON.stringify(data, null, 2),
         state: "success",
+        expandable: true,
       });
     }
   } catch (err) {
     log({
       log: "Error con health checker: " + (err as Error).message,
       state: "error",
+      expandable: true,
     });
   }
 };
@@ -494,27 +503,19 @@ const rateLimitWhile = async (
       for (const [key, value] of res.headers.entries()) {
         console.log(`${key}: ${value}`);
       }
-      log({
-        log: `${user}: Respuesta N°${attemps}. ${
-          total && remain ? `Límite total: ${total}, Restantes: ${remain}` : ""
-        } `,
-        state: color ? "success" : "success_two",
-      });
       if (
         JSON.stringify(data, null, 2).includes("API rate limit exceeded") ||
         JSON.stringify(data, null, 2).includes("Unauthorized")
       ) {
         flag = false;
       }
-      if (attemps === 1 || attemps >= maxAttemps)
-        log({
-          log: `Datos de la respuesta N°${attemps}: ${JSON.stringify(
-            data,
-            null,
-            2
-          )}}`,
-          state: color ? "success" : "success_two",
-        });
+      log({
+        log: `${user} - Respuesta N°${attemps} ${
+          total && remain ? `- Límite total: ${total} Restantes: ${remain}` : ""
+        }:\n ${JSON.stringify(data, null, 2)}}`,
+        state: color ? "success" : "success_two",
+        expandable: attemps === 1 || !flag,
+      });
     }
   }
 };
