@@ -4,6 +4,7 @@ import {
   RequestTransformerTestProps,
   TokenTestProps,
 } from "../components/Tests/types";
+import { getDifferencesOfTime } from "./utils/formatters";
 
 const producerURL = import.meta.env.VITE_KAFKA_PRODUCER_URL;
 const consumerURL = import.meta.env.VITE_KAFKA_CONSUMER_URL;
@@ -239,6 +240,7 @@ export const handleTrasformer = async ({
 export const handleCheker = async ({ log, token }: BaseLogsProps) => {
   log({ log: "Solicitando health checker...", state: "info" });
   try {
+    const startTime = new Date();
     const res = await fetch(
       BASE_URL + "/services/health/PlatformModuleSAP/Health/GetDatabasesStatus",
       {
@@ -251,6 +253,11 @@ export const handleCheker = async ({ log, token }: BaseLogsProps) => {
 
     const data = await res.json();
     const status = data.status;
+
+    const endTime = new Date();
+
+    const time = getDifferencesOfTime(startTime, endTime);
+    log({ log: `Tiempo de request: ${time}ms`, state: "info" });
 
     if (status === "error") {
       log({
@@ -273,9 +280,9 @@ export const handleCheker = async ({ log, token }: BaseLogsProps) => {
 //KAFKA TEST
 export const handleSendKafka = async ({ log }: BaseLogsProps) => {
   const body: any = {
-    name: "Medicamento",
+    name: `Medicamento Nº ${Math.floor(Math.random() * 9999)}`,
     description: "Medicamento de prueba",
-    price: 100,
+    price: Math.floor(Math.random() * 9999),
   };
   log({ log: "Solicitando envio a kafka provider...", state: "info" });
   log({ log: `Body:\n ${JSON.stringify(body, null, 2)}`, state: "info" });
