@@ -279,9 +279,10 @@ export const handleCheker = async ({ log, token }: BaseLogsProps) => {
 };
 //KAFKA TEST
 export const handleSendKafka = async ({ log }: BaseLogsProps) => {
+  const rnd = Math.floor(Math.random() * 9999);
   const body: any = {
-    name: `Medicamento Nº ${Math.floor(Math.random() * 9999)}`,
-    description: "Medicamento de prueba",
+    name: `Medicamento Nº ${rnd}`,
+    description: `Medicamento de prueba Nº ${rnd}`,
     price: Math.floor(Math.random() * 9999),
   };
   log({ log: "Solicitando envio a kafka provider...", state: "info" });
@@ -296,6 +297,7 @@ export const handleSendKafka = async ({ log }: BaseLogsProps) => {
         name: body.name,
         description: body.description,
         price: body.price,
+        timestamp: new Date().toISOString(),
       }),
     });
 
@@ -312,10 +314,11 @@ export const handleSendKafka = async ({ log }: BaseLogsProps) => {
   }
 };
 export const handleSendKafkaDLQ = async ({ log }: BaseLogsProps) => {
+  const rnd = Math.floor(Math.random() * 9999);
   const body: any = {
-    name: "fail",
-    description: "Falla de simulacro",
-    price: 999,
+    name: `fail`,
+    description: `Fallo de simulacro Nº ${rnd}`,
+    price: Math.floor(Math.random() * 9999),
   };
   log({ log: "Solicitando envio a kafka provider...", state: "info" });
   log({ log: `Body:\n ${JSON.stringify(body, null, 2)}`, state: "info" });
@@ -329,6 +332,7 @@ export const handleSendKafkaDLQ = async ({ log }: BaseLogsProps) => {
         name: body.name,
         description: body.description,
         price: body.price,
+        timestamp: new Date().toISOString(),
       }),
     });
 
