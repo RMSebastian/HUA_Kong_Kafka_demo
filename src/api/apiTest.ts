@@ -85,8 +85,7 @@ export const handleRateLimit = async ({
           type,
           apikey,
           apiToken,
-          undefined,
-          10
+          undefined
         );
         break;
       case 2:
@@ -97,8 +96,7 @@ export const handleRateLimit = async ({
           type,
           apikey,
           apiToken,
-          undefined,
-          5
+          undefined
         );
         await rateLimitWhile(
           "user2",
@@ -107,8 +105,7 @@ export const handleRateLimit = async ({
           apikey,
           type,
           apiToken,
-          false,
-          5
+          false
         );
         break;
     }
@@ -491,8 +488,7 @@ const rateLimitWhile = async (
   type: "global" | "consumer",
   apikey: string,
   apiToken: string,
-  color: boolean = true,
-  maxAttemps: number
+  color: boolean = true
 ) => {
   let flag = true;
   let attemps = 0;
