@@ -295,7 +295,11 @@ export const handleSendKafka = async ({ log }: BaseLogsProps) => {
     price: Math.floor(Math.random() * 9999),
   };
   log({ log: "Solicitando envio a kafka provider...", state: "info" });
-  log({ log: `Body:\n ${JSON.stringify(body, null, 2)}`, state: "info" });
+  log({
+    log: `Body:\n ${JSON.stringify(body, null, 2)}`,
+    state: "info",
+    expandable: true,
+  });
   try {
     const res = await fetch(`${producerURL}/createProduct`, {
       method: "POST",
@@ -330,7 +334,11 @@ export const handleSendKafkaDLQ = async ({ log }: BaseLogsProps) => {
     price: Math.floor(Math.random() * 9999),
   };
   log({ log: "Solicitando envio a kafka provider...", state: "info" });
-  log({ log: `Body:\n ${JSON.stringify(body, null, 2)}`, state: "info" });
+  log({
+    log: `Body:\n ${JSON.stringify(body, null, 2)}`,
+    state: "info",
+    expandable: true,
+  });
   try {
     const res = await fetch(`${producerURL}/createProduct`, {
       method: "POST",

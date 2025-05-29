@@ -63,7 +63,7 @@ const NormalLog = ({
   lineIndex: number;
 }) => {
   return (
-    <div className="flex flex-row w-max" key={globalIndex}>
+    <div className="flex flex-row w-max gap-2" key={globalIndex}>
       <div
         className={
           `${
@@ -85,7 +85,7 @@ const NormalLog = ({
       </div>
 
       <div className={" whitespace-pre-wrap " + `${loggerColorList[state]}`}>
-        {`  ${line}`}
+        {`${line}`}
       </div>
     </div>
   );
