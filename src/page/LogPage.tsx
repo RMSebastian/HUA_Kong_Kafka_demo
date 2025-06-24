@@ -32,14 +32,14 @@ const LogPage = () => {
           <button onClick={() => setToken("")}>Limpiar</button>
         </div>
         {/* KONG TESTS*/}
-        <h2>Kong</h2>
+        <h2>API Gateway</h2>
         <div className="flex flex-col gap-4 border-2 border-[#242424] bg-[#242424] p-2 rounded-lg ">
           <TokenTest log={log} token={token} />
           <RateLimitTest log={log} token={token} />
           <RequestTransformerTest log={log} token={token} />
         </div>
         {/* KAFKA TESTS*/}
-        <h2>Kafka</h2>
+        <h2>Service Bus</h2>
         <div className="flex flex-col gap-4 border-2 border-[#242424] bg-[#242424] p-2 rounded-lg">
           <KafkaTest log={log} token={token} />
         </div>

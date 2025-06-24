@@ -291,14 +291,14 @@ export const handleSendKafka = async ({ log }: BaseLogsProps) => {
     description: `Medicamento de prueba Nº ${rnd}`,
     price: Math.floor(Math.random() * 9999),
   };
-  log({ log: "Solicitando envio a kafka provider...", state: "info" });
+  log({ log: "Solicitando envio al service bus provider...", state: "info" });
   log({
     log: `Body:\n ${JSON.stringify(body, null, 2)}`,
     state: "info",
     expandable: true,
   });
   try {
-    const res = await fetch(`${producerURL}/createProduct`, {
+    const res = await fetch(`${producerURL}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -318,7 +318,7 @@ export const handleSendKafka = async ({ log }: BaseLogsProps) => {
     });
   } catch (error) {
     log({
-      log: "Error con kafka provider: " + (error as Error).message,
+      log: "Error con service bus provider: " + (error as Error).message,
       state: "error",
     });
   }
@@ -330,7 +330,7 @@ export const handleSendKafkaDLQ = async ({ log }: BaseLogsProps) => {
     description: `Fallo de simulacro Nº ${rnd}`,
     price: Math.floor(Math.random() * 9999),
   };
-  log({ log: "Solicitando envio a kafka provider...", state: "info" });
+  log({ log: "Solicitando envio al service bus provider...", state: "info" });
   log({
     log: `Body:\n ${JSON.stringify(body, null, 2)}`,
     state: "info",
@@ -357,13 +357,13 @@ export const handleSendKafkaDLQ = async ({ log }: BaseLogsProps) => {
     });
   } catch (error) {
     log({
-      log: "Error con kafka provider: " + (error as Error).message,
+      log: "Error con service bus provider: " + (error as Error).message,
       state: "error",
     });
   }
 };
 export const handleFetchKafka = async ({ log }: BaseLogsProps) => {
-  log({ log: "Solicitando rescate a kafka consumer...", state: "info" });
+  log({ log: "Solicitando rescate al service bus consumer...", state: "info" });
 
   try {
     const res = await fetch(`${consumerURL}/allProducts`, {
@@ -377,13 +377,16 @@ export const handleFetchKafka = async ({ log }: BaseLogsProps) => {
     });
   } catch (error) {
     log({
-      log: "Error con kafka consumer: " + (error as Error).message,
+      log: "Error con service bus consumer: " + (error as Error).message,
       state: "error",
     });
   }
 };
 export const handleFetchKafkaDLQ = async ({ log }: BaseLogsProps) => {
-  log({ log: "Solicitando rescate a kafka Consumer DLQ...", state: "info" });
+  log({
+    log: "Solicitando rescate al service bus consumer DLQ...",
+    state: "info",
+  });
 
   try {
     const res = await fetch(`${consumerURL}/Dlq`, {
@@ -401,7 +404,7 @@ export const handleFetchKafkaDLQ = async ({ log }: BaseLogsProps) => {
     });
   } catch (error) {
     log({
-      log: "Error con kafka consumer DLQ: " + (error as Error).message,
+      log: "Error con service bus consumer DLQ: " + (error as Error).message,
       state: "error",
     });
   }
@@ -509,7 +512,8 @@ const rateLimitWhile = async (
       }
       if (
         JSON.stringify(data, null, 2).includes("API rate limit exceeded") ||
-        JSON.stringify(data, null, 2).includes("Unauthorized")
+        JSON.stringify(data, null, 2).includes("Unauthorized") ||
+        JSON.stringify(data, null, 2).includes("404")
       ) {
         flag = false;
       }
